@@ -52,8 +52,6 @@ export default function SignInViewPage({ stars }: { stars: number }) {
   } = form;
 
   const onSubmitHandler = async (data: z.infer<typeof loginSchema>) => {
-    // call api
-    console.log('submit data', data);
     try {
       await axiosClient.post(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
