@@ -1,17 +1,77 @@
-import { buttonVariants } from '@/components/ui/button';
+'use client';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { SignIn as ClerkSignInForm } from '@clerk/nextjs';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
 import { IconStar } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import z from 'zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import axiosClient from 'utils/axios';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'Authentication',
   description: 'Authentication forms built using the components.'
 };
 
+const loginSchema = z.object({
+  identifier: z.string(),
+  password: z.string()
+});
+
 export default function SignInViewPage({ stars }: { stars: number }) {
+  const router = useRouter();
+  const form = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      identifier: '',
+      password: ''
+    }
+  });
+
+  const {
+    handleSubmit,
+    control,
+    setValue,
+    watch,
+    reset,
+    trigger,
+    formState: { isSubmitting }
+  } = form;
+
+  const onSubmitHandler = async (data: z.infer<typeof loginSchema>) => {
+    // call api
+    console.log('submit data', data);
+    try {
+      await axiosClient.post(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
+        data,
+        {
+          withCredentials: true
+        }
+      );
+      router.push(`/dashboard`);
+    } catch (err) {
+      const message =
+        err.response?.data?.message || 'เกิดข้อผิดพลาด ไม่สามารถเข้าสู่ระบบได้';
+      toast('เข้าสู่ระบบไม่สำเร็จ', {
+        description: message
+      });
+    }
+  };
+
   return (
     <div className='relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0'>
       <Link
@@ -71,11 +131,58 @@ export default function SignInViewPage({ stars }: { stars: number }) {
               <span className='font-display font-medium'>{stars}</span>
             </div>
           </Link>
-          <ClerkSignInForm
+          {/* <ClerkSignInForm
             initialValues={{
               emailAddress: 'your_mail+clerk_test@example.com'
             }}
-          />
+          /> */}
+          {/* form */}
+          <Form {...form}>
+            <form
+              onSubmit={handleSubmit(onSubmitHandler)}
+              className='flex flex-col gap-3'
+            >
+              <FormField
+                control={control}
+                name={`identifier`} // สมมติคุณเก็บคำตอบสั้นในฟิลด์นี้
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Username</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type='text'
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={control}
+                name={`password`} // สมมติคุณเก็บคำตอบสั้นในฟิลด์นี้
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type='password'
+                        onChange={(e) => {
+                          field.onChange(e.target.value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type='submit'> go </Button>
+            </form>
+          </Form>
 
           <p className='text-muted-foreground px-8 text-center text-sm'>
             By clicking continue, you agree to our{' '}
