@@ -4,6 +4,7 @@ import { withSentryConfig } from '@sentry/nextjs';
 // Define the base Next.js configuration
 const baseConfig: NextConfig = {
   images: {
+    domains: ['localhost'],
     remotePatterns: [
       {
         protocol: 'https',

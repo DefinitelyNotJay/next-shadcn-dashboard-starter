@@ -1,8 +1,8 @@
 'use client';
 import { useTheme } from 'next-themes';
-import React from 'react';
+import React, { useState } from 'react';
 import { ActiveThemeProvider } from '../active-theme';
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 export default function Providers({
   activeThemeValue,
   children
@@ -11,6 +11,11 @@ export default function Providers({
   children: React.ReactNode;
 }) {
   const { resolvedTheme } = useTheme();
+  const [queryClient] = useState(() => new QueryClient());
 
-  return <>{children}</>;
+  return (
+    <>
+      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    </>
+  );
 }
