@@ -27,6 +27,7 @@ import { toast } from 'sonner';
 import axiosClient from 'utils/axios';
 import { Course } from 'utils/schemaTypes';
 import * as z from 'zod';
+import Image from 'next/image';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -49,8 +50,6 @@ export default function CourseForm({
     poster_image: initialData?.poster_image || '',
     description: initialData?.description || ''
   };
-
-  console.log(initialData);
 
   const formSchema = z.object({
     title: z.string().min(1, { message: 'กรุณากรอกชื่อคอร์สเรียน' }),
@@ -77,11 +76,12 @@ export default function CourseForm({
     // Form submission logic would be implemented here
     console.log(values);
     const method = initialData ? axiosClient.patch : axiosClient.post;
+    const url = initialData ? `lecturer/${initialData.id}/course/` : `/course`;
     try {
-      const response = await method('/course', values, {
+      const response = await method(url, values, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      alert('done');
+      toast('Update successfully');
     } catch (error) {
       toast('เกิดข้อผิดพลาด');
     }
@@ -105,17 +105,34 @@ export default function CourseForm({
                   <FormItem className='w-full'>
                     <FormLabel>Images</FormLabel>
                     <FormControl>
-                      <FileUploader
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        maxFiles={4}
-                        maxSize={4 * 1024 * 1024}
-                        // disabled={loading}
-                        // progresses={progresses}
-                        // pass the onUpload function here for direct upload
-                        // onUpload={uploadFiles}
-                        // disabled={isUploading}
-                      />
+                      <div>
+                        <FileUploader
+                          value={
+                            typeof field.value === 'string' ? [] : field.value
+                          }
+                          onValueChange={field.onChange}
+                          maxFiles={4}
+                          maxSize={4 * 1024 * 1024}
+                          // disabled={loading}
+                          // progresses={progresses}
+                          // pass the onUpload function here for direct upload
+                          // onUpload={uploadFiles}
+                          // disabled={isUploading}
+                        />
+                        {typeof field.value === 'string' && field.value && (
+                          <div className='mt-2'>
+                            <p className='mb-2'>Image</p>
+                            <Image
+                              src={`http://localhost:3333/${field.value}`}
+                              alt='Course image'
+                              width={200}
+                              height={200}
+                              className='rounded-md border object-cover'
+                              unoptimized
+                            />
+                          </div>
+                        )}
+                      </div>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -193,7 +210,7 @@ export default function CourseForm({
                   <FormLabel>Description</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder='Enter product description'
+                      placeholder='Enter course description'
                       className='resize-none'
                       {...field}
                     />
@@ -202,7 +219,9 @@ export default function CourseForm({
                 </FormItem>
               )}
             />
-            <Button type='submit'>Add Product</Button>
+            <Button type='submit'>
+              {initialData ? 'Edit Course' : 'Add Course'}
+            </Button>
           </form>
         </Form>
       </CardContent>

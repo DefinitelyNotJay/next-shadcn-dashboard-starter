@@ -32,7 +32,7 @@ export const columns: ColumnDef<Course>[] = [
     id: 'title',
     accessorKey: 'title',
     header: ({ column }: { column: Column<Course, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Title' />
+      <DataTableColumnHeader column={column} title='TITLE' />
     ),
     cell: ({ cell }) => <div>{cell.getValue<Course['title']>()}</div>,
     meta: {
@@ -51,7 +51,7 @@ export const columns: ColumnDef<Course>[] = [
     id: 'status',
     accessorKey: 'status',
     header: ({ column }: { column: Column<Course, unknown> }) => (
-      <DataTableColumnHeader column={column} title='Status' />
+      <DataTableColumnHeader column={column} title='STATUS' />
     ),
     cell: ({ cell }) => {
       const status = cell.getValue<Course['status']>();
@@ -82,11 +82,16 @@ export const columns: ColumnDef<Course>[] = [
       const isPublic = cell.getValue<Course['is_public']>();
       return <p>{isPublic ? 'Public' : 'Private'}</p>;
     },
-    header: 'Public'
+    header: 'PUBLIC'
   },
   {
     accessorKey: 'description',
-    header: 'DESCRIPTION'
+    header: 'DESCRIPTION',
+    cell: ({ cell }) => {
+      const desc = cell.getValue<Course['description']>() || '';
+      const shortDesc = desc.length > 70 ? desc.slice(0, 70) + '...' : desc;
+      return <p className='line-clamp-2'>{shortDesc}</p>;
+    }
   },
 
   {

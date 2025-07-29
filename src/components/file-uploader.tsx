@@ -112,6 +112,14 @@ export function FileUploader(props: FileUploaderProps) {
     onChange: onValueChange
   });
 
+  function normalizeFiles(files: unknown): File[] {
+    if (!files) return [];
+    if (Array.isArray(files)) return files;
+    if (files instanceof File) return [files];
+    if (files instanceof FileList) return Array.from(files);
+    return []; // string หรือ object อื่น ๆ
+  }
+
   const onDrop = React.useCallback(
     (acceptedFiles: File[], rejectedFiles: FileRejection[]) => {
       if (!multiple && maxFiles === 1 && acceptedFiles.length > 1) {
@@ -244,7 +252,7 @@ export function FileUploader(props: FileUploaderProps) {
           </div>
         )}
       </Dropzone>
-      {files?.length ? (
+      {Array.isArray(files) && files?.length ? (
         <ScrollArea className='h-fit w-full px-3'>
           <div className='max-h-48 space-y-4'>
             {files?.map((file, index) => (
