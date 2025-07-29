@@ -23,6 +23,9 @@ import { Textarea } from '@/components/ui/textarea';
 import { Product } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import axiosClient from 'utils/axios';
+import { Course } from 'utils/schemaTypes';
 import * as z from 'zod';
 
 const MAX_FILE_SIZE = 5000000;
@@ -33,49 +36,55 @@ const ACCEPTED_IMAGE_TYPES = [
   'image/webp'
 ];
 
-const formSchema = z.object({
-  image: z
-    .any()
-    .refine((files) => files?.length == 1, 'Image is required.')
-    .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`
-    )
-    .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      '.jpg, .jpeg, .png and .webp files are accepted.'
-    ),
-  name: z.string().min(2, {
-    message: 'Product name must be at least 2 characters.'
-  }),
-  category: z.string(),
-  price: z.number(),
-  description: z.string().min(10, {
-    message: 'Description must be at least 10 characters.'
-  })
-});
-
-export default function ProductForm({
+export default function CourseForm({
   initialData,
   pageTitle
 }: {
-  initialData: Product | null;
+  initialData: Course | null;
   pageTitle: string;
 }) {
   const defaultValues = {
-    name: initialData?.name || '',
-    category: initialData?.category || '',
-    price: initialData?.price || 0,
+    title: initialData?.title || '',
+    status: initialData?.status || 'active',
+    poster_image: initialData?.poster_image || '',
     description: initialData?.description || ''
   };
+
+  console.log(initialData);
+
+  const formSchema = z.object({
+    title: z.string().min(1, { message: 'กรุณากรอกชื่อคอร์สเรียน' }),
+    status: z
+      .enum(['active', 'inactive', 'archive'], {
+        message: 'กรุณาเลือกสถานะคอร์ส'
+      })
+      .default('active'),
+    poster_image: z.any().optional(),
+    description: z.string().nullable().optional()
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     values: defaultValues
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  const courseStatus = [
+    { id: 1, name: 'Active', value: 'active' },
+    { id: 2, name: 'Inactive', value: 'inactive' }
+  ];
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
     // Form submission logic would be implemented here
+    console.log(values);
+    const method = initialData ? axiosClient.patch : axiosClient.post;
+    try {
+      const response = await method('/course', values, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      alert('done');
+    } catch (error) {
+      toast('เกิดข้อผิดพลาด');
+    }
   }
 
   return (
@@ -90,7 +99,7 @@ export default function ProductForm({
           <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
             <FormField
               control={form.control}
-              name='image'
+              name='poster_image'
               render={({ field }) => (
                 <div className='space-y-6'>
                   <FormItem className='w-full'>
@@ -117,12 +126,12 @@ export default function ProductForm({
             <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
               <FormField
                 control={form.control}
-                name='name'
+                name='title'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Product Name</FormLabel>
+                    <FormLabel>Course Name</FormLabel>
                     <FormControl>
-                      <Input placeholder='Enter product name' {...field} />
+                      <Input placeholder='Enter course name' {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -130,36 +139,36 @@ export default function ProductForm({
               />
               <FormField
                 control={form.control}
-                name='category'
+                name='status'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select
-                      onValueChange={(value) => field.onChange(value)}
-                      value={field.value[field.value.length - 1]}
-                    >
-                      <FormControl>
+                    <FormLabel className='text-base font-medium'>
+                      Status
+                    </FormLabel>
+                    <FormControl>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                      >
                         <SelectTrigger>
-                          <SelectValue placeholder='Select categories' />
+                          <SelectValue placeholder='Choose Status' />
                         </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value='beauty'>Beauty Products</SelectItem>
-                        <SelectItem value='electronics'>Electronics</SelectItem>
-                        <SelectItem value='clothing'>Clothing</SelectItem>
-                        <SelectItem value='home'>Home & Garden</SelectItem>
-                        <SelectItem value='sports'>
-                          Sports & Outdoors
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
+                        <SelectContent>
+                          {courseStatus.map((status) => (
+                            <SelectItem key={status.id} value={status.value}>
+                              {status.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
-                name='price'
+                name=''
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Price</FormLabel>
@@ -174,7 +183,7 @@ export default function ProductForm({
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
             </div>
             <FormField
               control={form.control}

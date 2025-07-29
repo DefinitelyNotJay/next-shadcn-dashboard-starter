@@ -1,25 +1,28 @@
-import { fakeProducts, Product } from '@/constants/mock-api';
 import { notFound } from 'next/navigation';
-import ProductForm from './product-form';
+import { Course } from 'utils/schemaTypes';
+import axiosServer from 'utils/axiosServer';
+import CourseForm from './course-form';
 
-type TProductViewPageProps = {
-  productId: string;
+type TCourseViewPageProps = {
+  courseId: string;
 };
 
-export default async function ProductViewPage({
-  productId
-}: TProductViewPageProps) {
+export default async function CourseViewPage({
+  courseId
+}: TCourseViewPageProps) {
   let product = null;
-  let pageTitle = 'Create New Product';
+  let pageTitle = 'Create New Course';
 
-  if (productId !== 'new') {
-    const data = await fakeProducts.getProductById(Number(productId));
-    product = data.product as Product;
+  if (courseId !== 'new') {
+    // get former
+    const data = await axiosServer.get(`/lecturer/${courseId}/course`);
+    console.log('data', data);
+    product = data.data as Course;
     if (!product) {
       notFound();
     }
-    pageTitle = `Edit Product`;
+    pageTitle = `Edit Course`;
   }
 
-  return <ProductForm initialData={product} pageTitle={pageTitle} />;
+  return <CourseForm initialData={product} pageTitle={pageTitle} />;
 }

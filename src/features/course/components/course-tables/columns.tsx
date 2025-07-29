@@ -3,7 +3,7 @@ import { Badge } from '@/components/ui/badge';
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { Product } from '@/constants/data';
 import { Column, ColumnDef } from '@tanstack/react-table';
-import { CheckCircle2, Text, XCircle } from 'lucide-react';
+import { CheckCircle2, Text, XCircle, Archive } from 'lucide-react';
 import Image from 'next/image';
 import { CellAction } from './cell-action';
 import { CATEGORY_OPTIONS } from './options';
@@ -44,33 +44,46 @@ export const columns: ColumnDef<Course>[] = [
     enableColumnFilter: true
   },
   // {
-  //   id: 'category',
-  //   accessorKey: 'category',
-  //   header: ({ column }: { column: Column<Course, unknown> }) => (
-  //     <DataTableColumnHeader column={column} title='Category' />
-  //   ),
-  //   cell: ({ cell }) => {
-  //     const status = cell.getValue<Course['category']>();
-  //     const Icon = status === 'active' ? CheckCircle2 : XCircle;
+  //   accessorKey: 'status',
+  //   header: 'STATUS'
+  // },
+  {
+    id: 'status',
+    accessorKey: 'status',
+    header: ({ column }: { column: Column<Course, unknown> }) => (
+      <DataTableColumnHeader column={column} title='Status' />
+    ),
+    cell: ({ cell }) => {
+      const status = cell.getValue<Course['status']>();
+      const Icon =
+        status === 'active'
+          ? CheckCircle2
+          : status === 'archive'
+            ? Archive
+            : XCircle;
 
-  //     return (
-  //       <Badge variant='outline' className='capitalize'>
-  //         <Icon />
-  //         {status}
-  //       </Badge>
-  //     );
-  //   },
-  //   enableColumnFilter: true,
-  //   meta: {
-  //     label: 'categories',
-  //     variant: 'multiSelect',
-  //     options: CATEGORY_OPTIONS
-  //   }
-  // },
-  // {
-  //   accessorKey: 'price',
-  //   header: 'PRICE'
-  // },
+      return (
+        <Badge variant='outline' className='capitalize'>
+          <Icon />
+          {status}
+        </Badge>
+      );
+    },
+    enableColumnFilter: true
+    // meta: {
+    //   label: 'categories',
+    //   variant: 'multiSelect',
+    //   options: CATEGORY_OPTIONS
+    // }
+  },
+  {
+    accessorKey: 'is_public',
+    cell: ({ cell }) => {
+      const isPublic = cell.getValue<Course['is_public']>();
+      return <p>{isPublic ? 'Public' : 'Private'}</p>;
+    },
+    header: 'Public'
+  },
   {
     accessorKey: 'description',
     header: 'DESCRIPTION'
