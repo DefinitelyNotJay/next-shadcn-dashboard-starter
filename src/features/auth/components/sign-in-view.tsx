@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
+import nookies from 'nookies';
 import {
   Form,
   FormControl,
@@ -53,13 +54,23 @@ export default function SignInViewPage({ stars }: { stars: number }) {
 
   const onSubmitHandler = async (data: z.infer<typeof loginSchema>) => {
     try {
-      await axiosClient.post(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login`,
-        data,
-        {
-          withCredentials: true
-        }
+      const res = await axiosClient.post(
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
+        data
       );
+      nookies.set(null, 'authToken', res.data.token, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      });
+
+      nookies.set(null, 'role', res.data.token, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+      });
       router.push(`/dashboard`);
     } catch (err) {
       const message =

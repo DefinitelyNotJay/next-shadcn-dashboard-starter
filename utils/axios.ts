@@ -1,9 +1,26 @@
-// src/utils/axios.ts
 import axios from 'axios';
+import nookies from 'nookies';
 
-const axiosClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL, // เช่น http://localhost:3333
-  withCredentials: true // จะใส่ Cookie ไปกับทุก request
+export const axiosClient = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT
 });
+
+// ใช้ Interceptor เพื่อให้ Token อัปเดตทุกครั้ง
+axiosClient.interceptors.request.use(
+  async (config) => {
+    const cookies = nookies.get();
+    const token = cookies.authToken;
+
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+export const fetcher = (url: string) =>
+  axiosClient.get(url).then((res) => res.data);
 
 export default axiosClient;
