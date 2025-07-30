@@ -36,7 +36,7 @@ const AttendantTable = ({
   return (
     <div className='overflow-x-auto'>
       <Table>
-        <TableCaption>จำนวนผู้เข้าอบรมทั้งหมด: {totalAttendees}</TableCaption>
+        <TableCaption>Total: {totalAttendees}</TableCaption>
         <TableHeader>
           <TableRow>
             <TableHead className='w-[50px]'>#</TableHead>
