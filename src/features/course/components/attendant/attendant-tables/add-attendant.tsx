@@ -33,6 +33,7 @@ import {
 import { useParams, useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { User } from '@/app/utils/schemaTypes';
+import { mutate } from 'swr';
 
 // Define available roles
 type Role = 'instructor' | 'ta' | 'student';
@@ -52,12 +53,9 @@ export const AddAttendant: React.FC = () => {
     if (open && role) {
       setLoading(true);
 
-      const fetchUrl =
-        role === 'instructor'
-          ? ''
-          : `lecturer/${params.courseId}/enrollments/unenrolled-users`;
+      const fetchUrl = `/lecturer/${params.courseId}/course/attendant/available`;
       axiosClient
-        .get(fetchUrl)
+        .get(fetchUrl, { params: { role } })
         .then((res) => setUsers(res.data))
         .catch(() => {
           toast.error('Failed to load users');
@@ -69,21 +67,14 @@ export const AddAttendant: React.FC = () => {
 
   const onConfirm = async (userId: string | number) => {
     setLoading(true);
-    const fetchUrl =
-      role === 'ta'
-        ? `/lecturer/${params.courseId}/staff/addTA/${userId}`
-        : role === 'student'
-          ? `/lecturer/${params.courseId}/enrollments/course/${userId}`
-          : '';
+    const url = `/lecturer/${params.courseId}/course/attendant/${userId}`;
     try {
-      await axiosClient.post(fetchUrl, {
-        user_id: selectedUser,
+      await axiosClient.post(url, {
         role
       });
       toast.success('Attendee added successfully.');
-      setOpen(false);
-      setSelectedUser(null);
-      setRole(null);
+      console.log('users', users);
+      setUsers((prev) => prev.filter((u) => u.id !== userId));
       router.refresh();
     } catch {
       toast.error('Failed to add attendee. Please try again.');
