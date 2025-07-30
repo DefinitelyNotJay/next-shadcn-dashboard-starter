@@ -23,7 +23,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Product } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { Course } from 'utils/schemaTypes';
+import { Course } from '@/app/utils/schemaTypes';
 import * as z from 'zod';
 
 const MAX_FILE_SIZE = 5000000;

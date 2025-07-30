@@ -1,5 +1,5 @@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User } from 'utils/schemaTypes';
+import { User } from '@/app/utils/schemaTypes';
 
 interface UserAvatarProfileProps {
   className?: string;

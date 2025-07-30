@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import ProductForm from './product-form';
-import { Course } from 'utils/schemaTypes';
-import axiosServer from 'utils/axiosServer';
+import { Course } from '@/app/utils/schemaTypes';
+import axiosServer from '@/app/utils/axiosServer';
 
 type TProductViewPageProps = {
   courseId: string;

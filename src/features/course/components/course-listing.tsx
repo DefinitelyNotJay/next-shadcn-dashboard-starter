@@ -4,8 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 import { CourseTable } from './course-tables';
 import { columns } from './course-tables/columns';
-import axiosClient from 'utils/axios'; // สมมุติว่าใช้ axios instance
-import { Course } from 'utils/schemaTypes';
+import axiosClient from '@/app/utils/axios'; // สมมุติว่าใช้ axios instance
+import { Course } from '@/app/utils/schemaTypes';
 
 async function fetchCourses(
   params: Record<string, string | string[] | undefined>

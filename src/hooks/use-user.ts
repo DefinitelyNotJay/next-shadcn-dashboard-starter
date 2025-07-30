@@ -1,7 +1,7 @@
 // src/hooks/use-user.ts
 import useSWR from 'swr';
-import axiosClient from 'utils/axios';
-import { User } from 'utils/schemaTypes';
+import axiosClient from '@/app/utils/axios';
+import { User } from '@/app/utils/schemaTypes';
 
 type useUserResponse = {
   user: User;

@@ -27,6 +27,8 @@ export function CourseTable<TData, TValue>({
     debounceMs: 500
   });
 
+  console.log('table course', table);
+
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table} />

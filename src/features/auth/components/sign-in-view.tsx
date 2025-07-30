@@ -18,7 +18,7 @@ import {
   FormMessage
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import axiosClient from 'utils/axios';
+import axiosClient from '@/app/utils/axios';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 

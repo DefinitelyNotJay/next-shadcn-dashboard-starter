@@ -1,4 +1,5 @@
 'use client';
+import { CourseAttendantWithUser } from '@/app/utils/schemaTypes';
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import {
@@ -14,7 +15,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface CellActionProps {
-  data: Product;
+  data: CourseAttendantWithUser;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -45,7 +46,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuItem
             onClick={() => router.push(`/dashboard/course/${data.id}`)}
           >
-            <IconEdit className='mr-2 h-4 w-4' /> Update
+            <IconEdit className='mr-2 h-4 w-4' /> Permission
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <IconTrash className='mr-2 h-4 w-4' /> Delete

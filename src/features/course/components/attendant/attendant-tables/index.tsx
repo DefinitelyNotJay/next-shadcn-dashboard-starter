@@ -5,6 +5,7 @@ import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { parseAsInteger, useQueryState } from 'nuqs';
+
 interface AttendantTableParams<TData, TValue> {
   data: TData[];
   totalItems: number;
@@ -26,6 +27,9 @@ export function AttendantTable<TData, TValue>({
     shallow: false,
     debounceMs: 500
   });
+
+  console.log('core rows:', table.getRowModel().rows.length);
+  console.log('paged rows:', table.getPaginationRowModel().rows.length);
 
   return (
     <DataTable table={table}>

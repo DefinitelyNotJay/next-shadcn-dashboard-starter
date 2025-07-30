@@ -6,14 +6,13 @@ import { Column, ColumnDef } from '@tanstack/react-table';
 import { CheckCircle2, Text, XCircle, Archive } from 'lucide-react';
 import Image from 'next/image';
 import { CellAction } from './cell-action';
-import { Course } from 'utils/schemaTypes';
+import { Course } from '@/app/utils/schemaTypes';
 
 export const columns: ColumnDef<Course>[] = [
   {
     accessorKey: 'poster_image',
     header: 'IMAGE',
     cell: ({ row }) => {
-      console.log(row.getValue('poster_image'));
       return (
         <div className='relative aspect-square'>
           <Image
