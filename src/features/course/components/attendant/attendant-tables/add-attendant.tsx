@@ -72,7 +72,9 @@ export const AddAttendant: React.FC = () => {
     const fetchUrl =
       role === 'ta'
         ? `/lecturer/${params.courseId}/staff/addTA/${userId}`
-        : `lecturer/${params.courseId}/enrollments/unenrolled-users`;
+        : role === 'student'
+          ? `/lecturer/${params.courseId}/enrollments/course/${userId}`
+          : '';
     try {
       await axiosClient.post(fetchUrl, {
         user_id: selectedUser,
@@ -145,7 +147,7 @@ export const AddAttendant: React.FC = () => {
 
           <div className='mt-4 flex h-[180px] flex-col gap-3 overflow-scroll'>
             {users.map((u) => (
-              <div key={u.id} className='flex justify-between'>
+              <div key={u.id} className='flex items-center justify-between'>
                 <p>
                   {u.first_name} {u.last_name}
                 </p>
