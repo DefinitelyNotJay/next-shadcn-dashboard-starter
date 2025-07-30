@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 import { Separator } from '@/components/ui/separator';
 import { Suspense } from 'react';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
+import { AddAttendant } from './attendant/attendant-tables/add-attendant';
 
 type TCourseViewPageProps = {
   courseId: string;
@@ -50,12 +51,7 @@ export default async function CourseViewPage({
                 title='Attendants'
                 description='Manage attendants (Server side table functionalities.)'
               />
-              <Link
-                href='/dashboard/course/new'
-                className={cn(buttonVariants(), 'text-xs md:text-sm')}
-              >
-                <IconPlus className='mr-2 h-4 w-4' /> Add New
-              </Link>
+              <AddAttendant />
             </div>
             <Separator />
             <Suspense
