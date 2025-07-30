@@ -5,25 +5,25 @@ import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
 import { useDataTable } from '@/hooks/use-data-table';
 import { ColumnDef } from '@tanstack/react-table';
 import { parseAsInteger, useQueryState } from 'nuqs';
-interface CourseTableParams<TData, TValue> {
+interface AttendantTableParams<TData, TValue> {
   data: TData[];
   totalItems: number;
   columns: ColumnDef<TData, TValue>[];
 }
-export function CourseTable<TData, TValue>({
+export function AttendantTable<TData, TValue>({
   data,
   totalItems,
   columns
-}: CourseTableParams<TData, TValue>) {
+}: AttendantTableParams<TData, TValue>) {
   const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
 
   const pageCount = Math.ceil(totalItems / pageSize);
 
   const { table } = useDataTable({
-    data, // Course data
-    columns, // Course columns
+    data,
+    columns,
     pageCount: pageCount,
-    shallow: false, //Setting to false triggers a network request with the updated querystring.
+    shallow: false,
     debounceMs: 500
   });
 

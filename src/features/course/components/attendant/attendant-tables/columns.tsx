@@ -6,34 +6,38 @@ import { Column, ColumnDef } from '@tanstack/react-table';
 import { CheckCircle2, Text, XCircle, Archive } from 'lucide-react';
 import Image from 'next/image';
 import { CellAction } from './cell-action';
-import { Course } from 'utils/schemaTypes';
+import { Course, CourseAttendantWithUser } from 'utils/schemaTypes';
 
-export const columns: ColumnDef<Course>[] = [
-  {
-    accessorKey: 'poster_image',
-    header: 'IMAGE',
-    cell: ({ row }) => {
-      console.log(row.getValue('poster_image'));
-      return (
-        <div className='relative aspect-square'>
-          <Image
-            src={`http://localhost:3333/` + row.getValue('poster_image')}
-            alt={'123'}
-            fill
-            className='rounded-lg'
-            unoptimized
-          />
-        </div>
-      );
-    }
-  },
+export const columns: ColumnDef<CourseAttendantWithUser>[] = [
+  // {
+  //   accessorKey: 'poster_image',
+  //   header: 'IMAGE',
+  //   cell: ({ row }) => {
+  //     console.log(row.getValue('poster_image'));
+  //     return (
+  //       <div className='relative aspect-square'>
+  //         <Image
+  //           src={`http://localhost:3333/` + row.getValue('poster_image')}
+  //           alt={'123'}
+  //           fill
+  //           className='rounded-lg'
+  //           unoptimized
+  //         />
+  //       </div>
+  //     );
+  //   }
+  // },
   {
     id: 'title',
     accessorKey: 'title',
-    header: ({ column }: { column: Column<Course, unknown> }) => (
-      <DataTableColumnHeader column={column} title='TITLE' />
+    header: ({
+      column
+    }: {
+      column: Column<CourseAttendantWithUser, unknown>;
+    }) => <DataTableColumnHeader column={column} title='TITLE' />,
+    cell: ({ cell }) => (
+      <div>{cell.getValue<CourseAttendantWithUser['id']>()}</div>
     ),
-    cell: ({ cell }) => <div>{cell.getValue<Course['title']>()}</div>,
     meta: {
       label: 'Title',
       placeholder: 'Search products...',
@@ -42,29 +46,21 @@ export const columns: ColumnDef<Course>[] = [
     },
     enableColumnFilter: true
   },
-  // {
-  //   accessorKey: 'status',
-  //   header: 'STATUS'
-  // },
   {
     id: 'status',
-    accessorKey: 'status',
-    header: ({ column }: { column: Column<Course, unknown> }) => (
-      <DataTableColumnHeader column={column} title='STATUS' />
-    ),
+    accessorKey: 'user',
+    header: ({
+      column
+    }: {
+      column: Column<CourseAttendantWithUser, unknown>;
+    }) => <DataTableColumnHeader column={column} title='FULLNAME' />,
     cell: ({ cell }) => {
-      const status = cell.getValue<Course['status']>();
-      const Icon =
-        status === 'active'
-          ? CheckCircle2
-          : status === 'archive'
-            ? Archive
-            : XCircle;
+      const user = cell.getValue<CourseAttendantWithUser['user']>();
+      console.log('user', user);
 
       return (
         <Badge variant='outline' className='capitalize'>
-          <Icon />
-          {status}
+          {user.first_name}
         </Badge>
       );
     },
