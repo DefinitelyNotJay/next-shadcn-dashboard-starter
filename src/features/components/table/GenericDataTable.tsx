@@ -49,14 +49,7 @@ export function GenericDataTable<T>({
     debounceMs: 500
   });
 
-  console.log('Table configuration:', {
-    data: data,
-    dataLength: data?.length,
-    columns: columns.length,
-    shallow: true,
-    debounceMs: 500,
-    throttleMs: 200
-  });
+  console.log('🏷️ Rows in table model:', table.getRowModel().rows);
 
   return (
     <div>

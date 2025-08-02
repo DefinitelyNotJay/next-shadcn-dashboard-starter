@@ -1,5 +1,6 @@
 import axios from 'axios';
 import nookies from 'nookies';
+import qs from 'qs';
 
 export const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -19,6 +20,9 @@ axiosClient.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+axiosClient.defaults.paramsSerializer = (params) =>
+  qs.stringify(params, { arrayFormat: 'brackets', encode: false });
 
 export const fetcher = (url: string) =>
   axiosClient.get(url).then((res) => res.data);
