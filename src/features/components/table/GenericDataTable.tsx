@@ -1,0 +1,74 @@
+// components/table/GenericDataTable.tsx
+'use client';
+
+import { DataTable } from '@/components/ui/table/data-table';
+import { DataTableToolbar } from '@/components/ui/table/data-table-toolbar';
+import { useDataTable } from '@/hooks/use-data-table';
+import { parseAsInteger, useQueryState } from 'nuqs';
+import {
+  getCoreRowModel,
+  useReactTable,
+  type ColumnDef
+} from '@tanstack/react-table';
+import { useQuery } from '@tanstack/react-query';
+import { useDataFetcherHook } from '@/hooks/use-data-fetcher';
+import { IconLoader2 } from '@tabler/icons-react';
+
+interface GenericDataTableProps<T> {
+  columns: ColumnDef<T, any>[];
+  fetchData: (params: {
+    page: number;
+    perPage: number;
+    [key: string]: any;
+  }) => Promise<{ data: T[]; totalItems: number }>;
+  title?: string;
+}
+
+export function GenericDataTable<T>({
+  columns,
+  fetchData,
+  title
+}: GenericDataTableProps<T>) {
+  // เปลี่ยน query param name ให้เป็น generic
+  const [page] = useQueryState('page', parseAsInteger.withDefault(1));
+  const [perPage] = useQueryState('perPage', parseAsInteger.withDefault(10));
+
+  // เรียก fetchData เมื่อ page / perPage หรือ filter เปลี่ยน
+  const { data, totalItems, isLoading } = useDataFetcherHook<T>(
+    ['generic-table', page, perPage],
+    () => fetchData({ page, perPage })
+  );
+
+  const pageCount = Math.ceil((totalItems ?? 0) / perPage);
+
+  const { table } = useDataTable({
+    data, // Course data
+    columns, // Course columns
+    pageCount: pageCount,
+    shallow: false, //Setting to false triggers a network request with the updated querystring.
+    debounceMs: 500
+  });
+
+  console.log('Table configuration:', {
+    data: data,
+    dataLength: data?.length,
+    columns: columns.length,
+    shallow: true,
+    debounceMs: 500,
+    throttleMs: 200
+  });
+
+  return (
+    <div>
+      {title && <h2 className='mb-4 text-xl font-semibold'>{title}</h2>}
+      {isLoading && (
+        <div className='flex justify-center py-8'>
+          <IconLoader2 />
+        </div>
+      )}
+      <DataTable table={table}>
+        <DataTableToolbar table={table} />
+      </DataTable>
+    </div>
+  );
+}

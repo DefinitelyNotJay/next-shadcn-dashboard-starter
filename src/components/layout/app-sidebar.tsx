@@ -114,7 +114,7 @@ export default function AppSidebar() {
                               asChild
                               isActive={pathname === subItem.url}
                             >
-                              <Link href={subItem.url}>
+                              <Link href={subItem.url} passHref>
                                 <span>{subItem.title}</span>
                               </Link>
                             </SidebarMenuSubButton>

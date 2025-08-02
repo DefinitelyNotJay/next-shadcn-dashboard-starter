@@ -6,22 +6,7 @@ import { CourseTable } from './course-tables';
 import { columns } from './course-tables/columns';
 import axiosClient from '@/app/utils/axios'; // สมมุติว่าใช้ axios instance
 import { Course } from '@/app/utils/schemaTypes';
-
-async function fetchCourses(
-  params: Record<string, string | string[] | undefined>
-) {
-  const { page, name, perPage, category } = params;
-
-  const filters: any = {
-    page,
-    limit: perPage,
-    ...(name && { search: name }),
-    ...(category && { categories: category })
-  };
-
-  const response = await axiosClient.get('/courses', { params: filters });
-  return response.data;
-}
+import { fetchCourses } from '@/services/course.service';
 
 export default function CourseListingPage() {
   const searchParams = useSearchParams();
@@ -37,6 +22,8 @@ export default function CourseListingPage() {
     queryKey: ['courses', queryParams],
     queryFn: () => fetchCourses(queryParams)
   });
+
+  console.log('course data', data);
 
   if (isLoading) return <p>Loading...</p>;
 

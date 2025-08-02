@@ -71,7 +71,7 @@ export default function SignInViewPage({ stars }: { stars: number }) {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict'
       });
-      router.push(`/dashboard`);
+      router.push(`/dashboard/overview`);
     } catch (err) {
       const message =
         err.response?.data?.message || 'เกิดข้อผิดพลาด ไม่สามารถเข้าสู่ระบบได้';

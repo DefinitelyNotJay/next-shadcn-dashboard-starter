@@ -16,6 +16,7 @@ export function CourseTable<TData, TValue>({
   columns
 }: CourseTableParams<TData, TValue>) {
   const [pageSize] = useQueryState('perPage', parseAsInteger.withDefault(10));
+
   const pageCount = Math.ceil(totalItems / pageSize);
 
   const { table } = useDataTable({
@@ -26,7 +27,7 @@ export function CourseTable<TData, TValue>({
     debounceMs: 500
   });
 
-  console.log('course table data:', data);
+  console.log('table course', table);
 
   return (
     <DataTable table={table}>

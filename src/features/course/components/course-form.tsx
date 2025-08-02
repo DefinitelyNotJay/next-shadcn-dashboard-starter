@@ -140,7 +140,7 @@ export default function CourseForm({
               )}
             />
 
-            <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+            <div className='grid grid-cols-1 items-center gap-6 md:grid-cols-2'>
               <FormField
                 control={form.control}
                 name='title'
