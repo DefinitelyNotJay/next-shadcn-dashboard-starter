@@ -10,9 +10,9 @@ import {
   useReactTable,
   type ColumnDef
 } from '@tanstack/react-table';
-import { useQuery } from '@tanstack/react-query';
 import { useDataFetcherHook } from '@/hooks/use-data-fetcher';
 import { IconLoader2 } from '@tabler/icons-react';
+import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 
 interface GenericDataTableProps<T> {
   columns: ColumnDef<T, any>[];
@@ -61,14 +61,19 @@ export function GenericDataTable<T>({
   return (
     <div>
       {title && <h2 className='mb-4 text-xl font-semibold'>{title}</h2>}
-      {isLoading && (
-        <div className='flex justify-center py-8'>
-          <IconLoader2 />
-        </div>
+      {isLoading ? (
+        // ถ้า loading แสดง skeleton หรือ spinner เท่านั้น
+        <DataTableSkeleton
+          rowCount={perPage}
+          columnCount={columns.length}
+          filterCount={1}
+        />
+      ) : (
+        // พอโหลดเสร็จแล้วค่อย render DataTable จริง ๆ
+        <DataTable table={table}>
+          <DataTableToolbar table={table} />
+        </DataTable>
       )}
-      <DataTable table={table}>
-        <DataTableToolbar table={table} />
-      </DataTable>
     </div>
   );
 }
