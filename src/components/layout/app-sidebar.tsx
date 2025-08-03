@@ -46,6 +46,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
+import { Skeleton } from '../ui/skeleton';
 export const company = {
   name: 'Acme Inc',
   logo: IconPhotoUp,
@@ -61,7 +62,7 @@ const tenants = [
 export default function AppSidebar() {
   const pathname = usePathname();
   const { isOpen } = useMediaQuery();
-  const { user } = useUser();
+  const { data: user, isLoading, error } = useUser();
   const router = useRouter();
   const handleSwitchTenant = (_tenantId: string) => {
     // Tenant switching functionality would be implemented here

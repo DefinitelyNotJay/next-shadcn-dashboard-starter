@@ -2,7 +2,7 @@
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { GitHubLogoIcon } from '@radix-ui/react-icons';
-import { IconStar } from '@tabler/icons-react';
+import { IconLoader2, IconSpiral, IconStar } from '@tabler/icons-react';
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
@@ -34,6 +34,7 @@ const loginSchema = z.object({
 
 export default function SignInViewPage({ stars }: { stars: number }) {
   const router = useRouter();
+
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -189,7 +190,18 @@ export default function SignInViewPage({ stars }: { stars: number }) {
                   </FormItem>
                 )}
               />
-              <Button type='submit'> go </Button>
+              <Button
+                type='submit'
+                variant={'default'}
+                className='cursor-pointer'
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <IconLoader2 className='ml-2 inline-block h-5 w-5 animate-spin' />
+                ) : (
+                  'Sign-in '
+                )}
+              </Button>
             </form>
           </Form>
 

@@ -12,7 +12,7 @@ export const userFormSchema = z.object({
   first_name_th: z.string().optional().nullable(),
   last_name_th: z.string().optional().nullable(),
   phone_number: z.string().optional().nullable(),
-  role_id: z.number().optional().nullable(),
+  role_id: z.number(),
   is_itkmitl: z.boolean().optional().nullable()
 });
 

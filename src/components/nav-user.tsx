@@ -25,17 +25,12 @@ import {
   SidebarMenuItem,
   useSidebar
 } from '@/components/ui/sidebar';
+import { User } from '@/app/utils/schemaTypes';
 
-export function NavUser({
-  user
-}: {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-}) {
+export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+
+  console.log(user);
 
   return (
     <SidebarMenu>
@@ -47,11 +42,13 @@ export function NavUser({
               className='data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground'
             >
               <Avatar className='h-8 w-8 rounded-lg'>
-                <AvatarImage src={user.avatar} alt={user.name} />
+                <AvatarImage src={user.profile_image as string} alt='img' />
                 <AvatarFallback className='rounded-lg'>CN</AvatarFallback>
               </Avatar>
               <div className='grid flex-1 text-left text-sm leading-tight'>
-                <span className='truncate font-semibold'>{user.name}</span>
+                <span className='truncate font-semibold'>
+                  {user.first_name} {user.last_name}
+                </span>
                 <span className='truncate text-xs'>{user.email}</span>
               </div>
               <IconChevronsDown className='ml-auto size-4' />

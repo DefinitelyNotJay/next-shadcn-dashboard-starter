@@ -24,7 +24,11 @@ export function useUser() {
     }
   );
 
+  console.log('user User', data);
+
   return {
-    data
+    data,
+    error,
+    isLoading
   };
 }
