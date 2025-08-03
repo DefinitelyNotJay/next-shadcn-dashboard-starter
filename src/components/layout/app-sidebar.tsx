@@ -46,18 +46,16 @@ import { usePathname, useRouter } from 'next/navigation';
 import * as React from 'react';
 import { Icons } from '../icons';
 import { OrgSwitcher } from '../org-switcher';
-import { Skeleton } from '../ui/skeleton';
+import nookies from 'nookies';
+import { signOut } from '@/services/auth.service';
+
 export const company = {
-  name: 'Acme Inc',
+  name: '',
   logo: IconPhotoUp,
   plan: 'Enterprise'
 };
 
-const tenants = [
-  { id: '1', name: 'Acme Inc' },
-  { id: '2', name: 'Beta Corp' },
-  { id: '3', name: 'Gamma Ltd' }
-];
+const tenants = [{ id: '1', name: '' }];
 
 export default function AppSidebar() {
   const pathname = usePathname();
@@ -69,6 +67,15 @@ export default function AppSidebar() {
   };
 
   const activeTenant = tenants[0];
+
+  const handleSignOut = async () => {
+    await signOut();
+
+    nookies.destroy(null, 'authToken', { path: '/' });
+    nookies.destroy(null, 'role', { path: '/' });
+
+    router.push('/auth/sign-in');
+  };
 
   React.useEffect(() => {
     // Side effects based on sidebar state changes
@@ -198,9 +205,12 @@ export default function AppSidebar() {
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={handleSignOut}
+                  className='cursor-pointer'
+                >
                   <IconLogout className='mr-2 h-4 w-4' />
-                  {/* <SignOutButton redirectUrl='/auth/sign-in' /> */}
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
