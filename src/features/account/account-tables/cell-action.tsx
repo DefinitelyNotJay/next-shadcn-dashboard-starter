@@ -1,4 +1,5 @@
 'use client';
+import { User } from '@/app/utils/schemaTypes';
 import { AlertModal } from '@/components/modal/alert-modal';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,20 +10,33 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu';
 import { Product } from '@/constants/data';
+import { deleteUser } from '@/services/account.service';
 import { IconEdit, IconDotsVertical, IconTrash } from '@tabler/icons-react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface CellActionProps {
-  data: Product;
+  data: User;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading] = useState(false);
   const [open, setOpen] = useState(false);
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    try {
+      await deleteUser(data);
+      toast.success('Delete Successfully');
+      queryClient.invalidateQueries({ queryKey: ['users'] });
+    } catch (error) {
+      toast.error('Failed');
+    }
+  };
 
   return (
     <>
@@ -43,7 +57,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/course/${data.id}`)}
+            onClick={() => router.push(`/dashboard/account/${data.id}`)}
           >
             <IconEdit className='mr-2 h-4 w-4' /> Update
           </DropdownMenuItem>

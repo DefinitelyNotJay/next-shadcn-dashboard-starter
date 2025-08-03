@@ -24,7 +24,7 @@ export function UserTable<TData, TValue>({
     columns, // Course columns
     pageCount: pageCount,
     shallow: false, //Setting to false triggers a network request with the updated querystring.
-    debounceMs: 500
+    debounceMs: 100
   });
 
   return (
