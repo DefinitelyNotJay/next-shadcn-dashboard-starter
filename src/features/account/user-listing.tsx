@@ -2,14 +2,14 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
-import { useMemo } from 'react';
+import { Suspense, useMemo } from 'react';
 import { UserTable } from './account-tables';
 import { accountColumns } from './account-tables/columns';
 import { fetchUsers } from '@/services/account.service';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import type { User } from '@/app/utils/schemaTypes';
 
-export default function CourseListingPage() {
+export default function UserListingPage() {
   const searchParams = useSearchParams();
 
   const rawParams = useMemo(
@@ -26,7 +26,7 @@ export default function CourseListingPage() {
     [rawParams.page, rawParams.perPage, rawParams.sort]
   );
 
-  const { data, isLoading } = useQuery({
+  const { data } = useQuery({
     queryKey: ['users', fetchParams],
     queryFn: () => fetchUsers(fetchParams)
   });
@@ -51,15 +51,21 @@ export default function CourseListingPage() {
 
   const totalClientItems = filteredUsers.length;
 
-  if (isLoading) {
-    return <DataTableSkeleton columnCount={6} rowCount={10} />;
-  }
-
   return (
-    <UserTable
-      data={filteredUsers}
-      totalItems={totalClientItems}
-      columns={accountColumns}
-    />
+    <Suspense
+      fallback={
+        <DataTableSkeleton
+          columnCount={accountColumns.length}
+          rowCount={8}
+          filterCount={2}
+        />
+      }
+    >
+      <UserTable
+        data={filteredUsers}
+        totalItems={totalClientItems}
+        columns={accountColumns}
+      />
+    </Suspense>
   );
 }

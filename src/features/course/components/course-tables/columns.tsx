@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { CellAction } from './cell-action';
 import { Course } from '@/app/utils/schemaTypes';
 
-export const columns: ColumnDef<Course>[] = [
+export const courseColumns: ColumnDef<Course>[] = [
   {
     accessorKey: 'poster_image',
     header: 'IMAGE',
@@ -34,7 +34,7 @@ export const columns: ColumnDef<Course>[] = [
     cell: ({ cell }) => <div>{cell.getValue<Course['title']>()}</div>,
     meta: {
       label: 'Title',
-      placeholder: 'Search products...',
+      placeholder: 'Search courses...',
       variant: 'text',
       icon: Text
     },

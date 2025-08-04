@@ -1,66 +1,51 @@
 'use client';
-import { Badge } from '@/components/ui/badge';
-import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { ColumnDef } from '@tanstack/react-table';
-import Image from 'next/image';
-import { CourseAttendantWithUser } from '@/app/utils/schemaTypes';
+import { CourseAttendant } from '@/app/utils/schemaTypes';
 
-export const columns: ColumnDef<CourseAttendantWithUser>[] = [
+export const attendantColumns: ColumnDef<CourseAttendant>[] = [
   {
-    accessorKey: 'user.profile_image',
-    id: 'image',
-    header: 'IMAGE',
-    cell: ({ getValue }) => {
-      const url = getValue<string>();
-      if (!url) {
-        return (
-          <div className='relative flex h-10 w-10 items-center justify-center rounded-lg bg-gray-200'>
-            <span className='text-xs text-gray-500'>No Image</span>
-          </div>
-        );
-      }
-      return (
-        <div className='relative h-10 w-10'>
-          <Image
-            src={url}
-            alt='Profile'
-            fill
-            className='rounded-lg object-cover'
-            unoptimized
-            onError={(e) => {
-              console.log('Image load error:', e);
-            }}
-          />
-        </div>
-      );
-    }
+    id: 'username',
+    header: 'Username',
+    accessorFn: (row) => row.user.username,
+    cell: (info) => info.getValue()
   },
   {
-    accessorFn: (row) =>
-      `${row.user?.first_name || ''} ${row.user?.last_name || ''}`.trim(),
-    id: 'fullname',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='FULLNAME' />
-    ),
-    cell: ({ getValue }) => {
-      const name = getValue<string>();
-      return (
-        <Badge variant='outline' className='capitalize'>
-          {name || 'Unknown User'}
-        </Badge>
-      );
-    },
-    enableColumnFilter: true
+    id: 'fullName',
+    header: 'Name',
+    accessorFn: (row) => `${row.user.first_name} ${row.user.last_name}`,
+    cell: (info) => info.getValue()
   },
   {
-    accessorKey: 'user.email',
+    id: 'thaiName',
+    header: 'ชื่อ (ไทย)',
+    accessorFn: (row) => `${row.user.first_name_th} ${row.user.last_name_th}`,
+    cell: (info) => info.getValue()
+  },
+  {
     id: 'email',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='EMAIL' />
-    ),
-    cell: ({ getValue }) => {
-      const email = getValue<string>();
-      return <span className='text-sm'>{email || 'No email'}</span>;
+    header: 'Email',
+    accessorFn: (row) => row.user.email,
+    cell: (info) => info.getValue()
+  },
+  {
+    id: 'role',
+    header: 'Role',
+    accessorFn: (row) => row.role.name,
+    cell: (info) => info.getValue()
+  },
+  {
+    id: 'status',
+    header: 'Status',
+    accessorKey: 'status',
+    cell: (info) => info.getValue()
+  },
+  {
+    id: 'lastViewed',
+    header: 'Last Viewed',
+    accessorKey: 'last_viewed_at',
+    cell: (info) => {
+      const v = info.getValue<string | null>();
+      return v ? new Date(v).toLocaleString() : '-';
     }
   }
 ];

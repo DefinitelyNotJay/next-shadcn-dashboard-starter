@@ -64,7 +64,8 @@ export default function CourseForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    values: defaultValues
+    values: defaultValues,
+    shouldUnregister: true
   });
 
   const courseStatus = [
@@ -140,7 +141,7 @@ export default function CourseForm({
               )}
             />
 
-            <div className='grid grid-cols-1 items-center gap-6 md:grid-cols-2'>
+            <div className='grid grid-cols-1 items-start gap-6 md:grid-cols-2'>
               <FormField
                 control={form.control}
                 name='title'
@@ -158,7 +159,7 @@ export default function CourseForm({
                 control={form.control}
                 name='status'
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className='-translate-y-2'>
                     <FormLabel className='text-base font-medium'>
                       Status
                     </FormLabel>
@@ -213,6 +214,7 @@ export default function CourseForm({
                       placeholder='Enter course description'
                       className='resize-none'
                       {...field}
+                      value={field.value ?? ''}
                     />
                   </FormControl>
                   <FormMessage />

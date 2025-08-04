@@ -4,7 +4,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
-import AccountListing from '@/features/account/account-listing';
+import UserListingPage from '@/features/account/user-listing';
 import { searchParamsCache } from '@/lib/searchparams';
 import { cn } from '@/lib/utils';
 import { IconPlus } from '@tabler/icons-react';
@@ -39,17 +39,12 @@ export default async function Page(props: PageProps) {
         </div>
 
         <Separator />
-
         <Suspense
           fallback={
-            <DataTableSkeleton
-              columnCount={accountColumns.length}
-              rowCount={8}
-              filterCount={2}
-            />
+            <DataTableSkeleton columnCount={5} rowCount={8} filterCount={2} />
           }
         >
-          <AccountListing />
+          <UserListingPage />
         </Suspense>
       </div>
     </PageContainer>
