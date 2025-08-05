@@ -185,37 +185,39 @@ export default function CourseForm({
                   )}
                 />
                 {/* // access code */}
-                <FormField
-                  control={form.control}
-                  name='access_code'
-                  render={({ field }) => (
-                    <FormItem className='-translate-y-2'>
-                      <FormLabel className='text-base font-medium'>
-                        Access Code
-                      </FormLabel>
-                      <FormControl>
-                        <div className='flex items-center space-x-2'>
-                          <Input
-                            type='text'
-                            {...field}
-                            disabled
-                            value={field.value ?? ''}
-                            className='flex-1'
-                          />
-                          <Button
-                            type='button'
-                            onClick={onResetAccessCode}
-                            className='cursor-pointer'
-                          >
-                            <IconRefresh />
-                          </Button>
-                        </div>
-                      </FormControl>
+                {initialData && (
+                  <FormField
+                    control={form.control}
+                    name='access_code'
+                    render={({ field }) => (
+                      <FormItem className='-translate-y-2'>
+                        <FormLabel className='text-base font-medium'>
+                          Access Code
+                        </FormLabel>
+                        <FormControl>
+                          <div className='flex items-center space-x-2'>
+                            <Input
+                              type='text'
+                              {...field}
+                              disabled
+                              value={field.value ?? ''}
+                              className='flex-1'
+                            />
+                            <Button
+                              type='button'
+                              onClick={onResetAccessCode}
+                              className='cursor-pointer'
+                            >
+                              <IconRefresh />
+                            </Button>
+                          </div>
+                        </FormControl>
 
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
               </div>
               {/* <FormField
                 control={form.control}

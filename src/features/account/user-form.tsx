@@ -19,12 +19,9 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Product } from '@/constants/mock-api';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import axiosClient from '@/app/utils/axios';
 import { Course, User } from '@/app/utils/schemaTypes';
 import * as z from 'zod';
 import { Checkbox } from '@/components/ui/checkbox';
