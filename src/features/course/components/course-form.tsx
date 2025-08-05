@@ -28,6 +28,9 @@ import axiosClient from '@/app/utils/axios';
 import { Course } from '@/app/utils/schemaTypes';
 import * as z from 'zod';
 import Image from 'next/image';
+import { CourseFormValues, courseSchema } from '@/schemas/course';
+import { IconRefresh, IconRewindBackward10 } from '@tabler/icons-react';
+import { resetAccessCode } from '@/services/course.service';
 
 const MAX_FILE_SIZE = 5000000;
 const ACCEPTED_IMAGE_TYPES = [
@@ -48,22 +51,12 @@ export default function CourseForm({
     title: initialData?.title || '',
     status: initialData?.status || 'active',
     poster_image: initialData?.poster_image || '',
-    description: initialData?.description || ''
+    description: initialData?.description || '',
+    access_code: initialData?.access_code || ''
   };
 
-  const formSchema = z.object({
-    title: z.string().min(1, { message: 'กรุณากรอกชื่อคอร์สเรียน' }),
-    status: z
-      .enum(['active', 'inactive', 'archive'], {
-        message: 'กรุณาเลือกสถานะคอร์ส'
-      })
-      .default('active'),
-    poster_image: z.any().optional(),
-    description: z.string().nullable().optional()
-  });
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<CourseFormValues>({
+    resolver: zodResolver(courseSchema),
     values: defaultValues,
     shouldUnregister: true
   });
@@ -73,8 +66,7 @@ export default function CourseForm({
     { id: 2, name: 'Inactive', value: 'inactive' }
   ];
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    // Form submission logic would be implemented here
+  async function onSubmit(values: CourseFormValues) {
     console.log(values);
     const method = initialData ? axiosClient.patch : axiosClient.post;
     const url = initialData ? `lecturer/${initialData.id}/course/` : `/course`;
@@ -86,6 +78,13 @@ export default function CourseForm({
     } catch (error) {
       toast('เกิดข้อผิดพลาด');
     }
+  }
+
+  async function onResetAccessCode() {
+    try {
+      const newAccessCode = await resetAccessCode(initialData?.id ?? 0);
+      form.setValue('access_code', newAccessCode);
+    } catch (error) {}
   }
 
   return (
@@ -104,7 +103,7 @@ export default function CourseForm({
               render={({ field }) => (
                 <div className='space-y-6'>
                   <FormItem className='w-full'>
-                    <FormLabel>Images</FormLabel>
+                    <FormLabel>Upload Course Image</FormLabel>
                     <FormControl>
                       <div>
                         <FileUploader
@@ -122,7 +121,7 @@ export default function CourseForm({
                         />
                         {typeof field.value === 'string' && field.value && (
                           <div className='mt-2'>
-                            <p className='mb-2'>Image</p>
+                            <p className='mb-2'>Course Image</p>
                             <Image
                               src={`http://localhost:3333/${field.value}`}
                               alt='Course image'
@@ -141,7 +140,7 @@ export default function CourseForm({
               )}
             />
 
-            <div className='grid grid-cols-1 items-start gap-6 md:grid-cols-2'>
+            <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-[2fr_1fr]'>
               <FormField
                 control={form.control}
                 name='title'
@@ -155,35 +154,69 @@ export default function CourseForm({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='status'
-                render={({ field }) => (
-                  <FormItem className='-translate-y-2'>
-                    <FormLabel className='text-base font-medium'>
-                      Status
-                    </FormLabel>
-                    <FormControl>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder='Choose Status' />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {courseStatus.map((status) => (
-                            <SelectItem key={status.id} value={status.value}>
-                              {status.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className='flex gap-3'>
+                <FormField
+                  control={form.control}
+                  name='status'
+                  render={({ field }) => (
+                    <FormItem className='-translate-y-2'>
+                      <FormLabel className='text-base font-medium'>
+                        Status
+                      </FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder='Choose Status' />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {courseStatus.map((status) => (
+                              <SelectItem key={status.id} value={status.value}>
+                                {status.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* // access code */}
+                <FormField
+                  control={form.control}
+                  name='access_code'
+                  render={({ field }) => (
+                    <FormItem className='-translate-y-2'>
+                      <FormLabel className='text-base font-medium'>
+                        Access Code
+                      </FormLabel>
+                      <FormControl>
+                        <div className='flex items-center space-x-2'>
+                          <Input
+                            type='text'
+                            {...field}
+                            disabled
+                            value={field.value ?? ''}
+                            className='flex-1'
+                          />
+                          <Button
+                            type='button'
+                            onClick={onResetAccessCode}
+                            className='cursor-pointer'
+                          >
+                            <IconRefresh />
+                          </Button>
+                        </div>
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               {/* <FormField
                 control={form.control}
                 name=''

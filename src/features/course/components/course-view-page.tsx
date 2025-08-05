@@ -1,4 +1,3 @@
-// features/course/components/course-view-page.tsx
 import { notFound } from 'next/navigation';
 import { Course } from '@/app/utils/schemaTypes';
 import axiosServer from '@/app/utils/axiosServer';
@@ -11,6 +10,8 @@ import { Suspense } from 'react';
 import { DataTableSkeleton } from '@/components/ui/table/data-table-skeleton';
 import { AddAttendant } from './attendant/attendant-tables/add-attendant';
 import CardParent from '@/features/auth/components/card-parent';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import UserForm from '@/features/account/user-form';
 
 type TCourseViewPageProps = {
   courseId: string;
@@ -37,10 +38,18 @@ export default async function CourseViewPage({
   }
 
   return (
-    <>
-      <CourseForm initialData={course} pageTitle={pageTitle} />
-
-      {course && (
+    <Tabs defaultValue={'detail'}>
+      <TabsList>
+        <TabsTrigger value='lesson'>Lesson</TabsTrigger>
+        <TabsTrigger value='detail'>Detail</TabsTrigger>
+        <TabsTrigger value='attendant'>Attendant</TabsTrigger>
+        <TabsTrigger value='statistic'>Statistic</TabsTrigger>
+      </TabsList>
+      <TabsContent value={'lesson'}></TabsContent>
+      <TabsContent value={'detail'}>
+        <CourseForm initialData={course} pageTitle='Course Detail' />
+      </TabsContent>
+      <TabsContent value={'attendant'}>
         <CardParent>
           <PageContainer scrollable={false}>
             <div className='flex flex-1 flex-col space-y-4'>
@@ -70,7 +79,8 @@ export default async function CourseViewPage({
             </div>
           </PageContainer>
         </CardParent>
-      )}
-    </>
+      </TabsContent>
+      <TabsContent value={'statistic'}></TabsContent>
+    </Tabs>
   );
 }

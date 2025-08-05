@@ -1,3 +1,4 @@
+import axiosServer from '@/app/utils/axiosServer';
 import PageContainer from '@/components/layout/page-container';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -11,7 +12,7 @@ import {
 import { IconTrendingDown, IconTrendingUp } from '@tabler/icons-react';
 import React from 'react';
 
-export default function OverViewLayout({
+export default async function OverViewLayout({
   sales,
   pie_stats,
   bar_stats,
@@ -22,12 +23,18 @@ export default function OverViewLayout({
   bar_stats: React.ReactNode;
   area_stats: React.ReactNode;
 }) {
+  const response = await axiosServer.get('/admin/statistic/user', {
+    params: {
+      role: 'student'
+    }
+  });
+  console.log('total users', response.data);
   return (
     <PageContainer>
       <div className='flex flex-1 flex-col space-y-2'>
         <div className='flex items-center justify-between space-y-2'>
           <h2 className='text-2xl font-bold tracking-tight'>
-            Hi, Welcome back 👋
+            Hi, Welcome back
           </h2>
         </div>
 

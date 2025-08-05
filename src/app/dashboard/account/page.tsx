@@ -11,7 +11,6 @@ import { IconPlus } from '@tabler/icons-react';
 import Link from 'next/link';
 import { SearchParams } from 'nuqs/server';
 import { Suspense } from 'react';
-import { accountColumns } from '@/features/account/account-tables/columns';
 
 export const metadata = {
   title: 'Dashboard: Accounts'

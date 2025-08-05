@@ -11,8 +11,11 @@ export async function fetchCourses(
     ...(category && { categories: category })
   };
 
-  const response = await axiosClient.get('/courses', { params: filters });
-  return response.data;
+  const response = await axiosClient.get('/admin/course', { params: filters });
+  return {
+    data: response.data.data,
+    totalItems: response.data.meta.total as number
+  };
 }
 
 export async function fetchAttendants({
@@ -35,5 +38,10 @@ export async function fetchAttendants({
     `/lecturer/${courseId}/enrollments/attendants`,
     { params: filters }
   );
+  return response.data;
+}
+
+export async function resetAccessCode(courseId: string | number) {
+  const response = await axiosClient.put(`/admin/course/${courseId}/code`);
   return response.data;
 }

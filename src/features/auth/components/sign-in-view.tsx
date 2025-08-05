@@ -112,12 +112,11 @@ export default function SignInViewPage({ stars }: { stars: number }) {
         </div>
         <div className='relative z-20 mt-auto'>
           <blockquote className='space-y-2'>
-            <p className='text-lg'>
-              &ldquo;This starter template has saved me countless hours of work
-              and helped me deliver projects to my clients faster than ever
-              before.&rdquo;
-            </p>
-            <footer className='text-sm'>Random Dude</footer>
+            <p className='text-lg'>IT Innovation for Sustainable Future</p>
+            <footer className='text-sm'>
+              คณะเทคโนโลยีสารสนเทศ
+              สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
+            </footer>
           </blockquote>
         </div>
       </div>
@@ -129,7 +128,7 @@ export default function SignInViewPage({ stars }: { stars: number }) {
             target='_blank'
             href={'https://github.com/kiranism/next-shadcn-dashboard-starter'}
           >
-            <div className='flex items-center'>
+            {/* <div className='flex items-center'>
               <GitHubLogoIcon className='size-4' />
               <span className='ml-1 inline'>Star on GitHub</span>{' '}
             </div>
@@ -139,7 +138,7 @@ export default function SignInViewPage({ stars }: { stars: number }) {
                 fill='currentColor'
               />
               <span className='font-display font-medium'>{stars}</span>
-            </div>
+            </div> */}
           </Link>
           {/* <ClerkSignInForm
             initialValues={{

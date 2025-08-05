@@ -6,7 +6,7 @@ export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const authToken = req.cookies.get('authToken')?.value;
 
-  console.log('▶️ middleware:', pathname, 'token?', !!authToken);
+  // console.log('▶️ middleware:', pathname, 'token?', !!authToken);
 
   if (!authToken && pathname !== '/auth/sign-in') {
     return NextResponse.redirect(new URL('/auth/sign-in', req.url));

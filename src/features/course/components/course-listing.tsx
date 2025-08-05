@@ -40,8 +40,10 @@ export default function CourseListingPage() {
     queryFn: () => fetchCourses(fetchParams)
   });
 
-  const courses: Course[] = data || [];
-  const totalcourses: number = data || 0;
+  console.log('courses', data);
+
+  const courses: Course[] = data?.data || [];
+  const totalcourses: number = data?.totalItems || 0;
 
   const filteredCourses = useMemo(() => {
     return courses.filter((user) =>

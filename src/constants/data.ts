@@ -19,6 +19,7 @@ export const navItems: NavItem[] = [
     icon: 'dashboard',
     isActive: false,
     shortcut: ['d', 'd'],
+    description: '',
     items: [] // Empty array as there are no child items for Dashboard
   },
   {
@@ -27,6 +28,8 @@ export const navItems: NavItem[] = [
     icon: 'course',
     shortcut: ['p', 'p'],
     isActive: false,
+    description:
+      'This page serves as the central hub for managing your courses. It displays a clear overview of all existing courses in a searchable, filterable list and offers a prominent “Add New” button to quickly create additional courses. From here, you can effortlessly browse, review, and update course information in one place.',
     items: [] // No child items
   },
   {
@@ -35,6 +38,8 @@ export const navItems: NavItem[] = [
     icon: 'user',
     shortcut: ['p', 'p'],
     isActive: false,
+    description:
+      'This page is your central interface for managing user accounts. It presents a clear, searchable list of all existing accounts and includes an easy-to-find “Add New” button for creating additional users. From here, you can quickly browse, filter, and update account details in one convenient location.',
     items: [] // No child items
   },
   // {

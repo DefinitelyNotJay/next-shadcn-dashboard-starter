@@ -135,44 +135,20 @@ export type ApiToken = {
 export type Course = {
   id: number;
   title: string;
-  language: string;
   description: string | null;
-  owner_id: number | null;
-  category_id: number | null;
   price: number;
-  is_visible: boolean; // tinyint(1)
-  is_enrollable: boolean; // tinyint(1)
-  is_recommended: boolean; // tinyint(1)
-  is_limit_student: boolean; // tinyint(1)
   max_students: number | null;
-  start_enroll: string | null; // datetime
-  end_enroll: string | null; // datetime
-  learning_method: 'onsite' | 'online'; // enum
   status: string;
-  type: 'normal' | 'corporate' | 'kmitl'; // enum
   poster_image: string | null;
-  preview_video: string | null;
   created_at: string; // timestamp
   updated_at: string | null; // timestamp
-  is_kbtg: boolean | null; // tinyint(1)
-  price_kmitl: number | null;
-  short_description: string | null;
   organization: string | null;
-  certificate_template_id: number | null;
   is_published: boolean; // tinyint(1)
   is_public: boolean;
-  code: string | null;
-  major: majorCourse | null;
-  track: string | null;
-  term: string | null;
-  year: number | null;
-  isEnrolled: boolean;
-  isTA: boolean;
-  canEnroll: boolean;
+  access_code: string | null;
   instructors: Instructor[] | null;
   enroll_count: number;
   resources: File[];
-  credit: number;
 };
 
 export enum majorCourse {
